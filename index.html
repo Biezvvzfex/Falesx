@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fales Xiters - Venda e Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    /* Estilo da seção de Venda */
+    .product {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .product img {
+      width: 200px;
+      height: auto;
+      border-radius: 10px;
+      margin-right: 20px;
+    }
+    .product-title, .product-description, .product-price {
+      margin-bottom: 10px;
+    }
+    .guarantee {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      padding: 10px;
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    .guarantee img {
+      width: 70px;
+      height: auto;
+      margin-right: 15px;
+    }
+    /* Estilo da seção de Checkout */
+    .checkout-container {
+      max-width: 600px;
+      background: #333;
+      color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      margin-top: 50px;
+    }
+    .checkout-container h1, .checkout-container p {
+      color: #fff;
+    }
+    .pix-code {
+      background: #444;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px;
+      font-size: 16px;
+      color: #fff;
+      background: #27ae60;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn:hover {
+      background: #219150;
+    }
+  </style>
+</head>
+<body>
+  <!-- Seção de Venda -->
+  <div class="container">
+    <h1>Fales Xiters - Oferta Especial</h1>
+    <div class="product">
+      <img src="https://i.ibb.co/3sVjyg8/977d7cdf-e740-4397-b13a-b0c7a212fffb.webp" alt="Produto Fales Xiters">
+      <div>
+        <h2 class="product-title">Xit Exclusivo da Fales Xiters</h2>
+        <p class="product-description">Adquira nosso xit premium para melhorar sua experiência!</p>
+        <p class="product-price">Apenas R$ 25,00</p>
+      </div>
+    </div>
+    <div class="guarantee">
+      <img src="https://i.ibb.co/z2LWHDY/3f02fae7b7a2147a4fbc73d51b664ff4-removebg-preview.png" alt="Garantia de 7 Dias">
+      <p><strong>Garantia de 7 Dias:</strong> Caso não esteja satisfeito, devolvemos seu dinheiro sem complicações!</p>
+    </div>
+    <form action="#checkout" method="GET">
+      <label for="name">Nome Completo</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="phone">Número de Telefone</label>
+      <input type="tel" id="phone" name="phone" required>
+      
+      <button type="submit" class="btn">Comprar Agora</button>
+    </form>
+  </div>
+
+  <!-- Seção de Checkout -->
+  <div class="container checkout-container" id="checkout">
+    <h1>Checkout - Fales Xiters</h1>
+    <div class="details">
+      <p><strong>Nome:</strong> <span id="checkoutName"></span></p>
+      <p><strong>E-mail:</strong> <span id="checkoutEmail"></span></p>
+      <p><strong>Telefone:</strong> <span id="checkoutPhone"></span></p>
+    </div>
+    <div class="total">Total a pagar: R$ 25,00</div>
+    <div class="qr-code-container">
+      <h2>Pagamento Pix</h2>
+      <img id="qrCode" alt="QR Code Pix">
+      <div class="pix-code" id="pixCode"></div>
+      <div class="timer" id="timer">QR Code expira em: 30:00</div>
+    </div>
+    <div class="message">
+      <strong>📧 Atenção:</strong><br>
+      Após a confirmação do pagamento, o acesso ao <strong>Xit Exclusivo</strong> será enviado automaticamente para o seu e-mail cadastrado.
+    </div>
+    <div class="btn-container">
+      <a href="#top" class="btn">Voltar para a Tela Inicial</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById("checkoutName").textContent = urlParams.get("name");
+    document.getElementById("checkoutEmail").textContent = urlParams.get("email");
+    document.getElementById("checkoutPhone").textContent = urlParams.get("phone");
+
+    const pixCode = "00020126420014BR.GOV.BCB.PIX0120bieldados1@gmail.com520400005303986540525.005802BR5925Antonio Gabriel da Concei6009SAO PAULO61080540900062250521X2uj3aDk0TSJyqld7xxdm6304D7FD";
+
+    QRCode.toDataURL(pixCode, { width: 200 }, (err, url) => {
+      if (!err) document.getElementById("qrCode").src = url;
+    });
+
+    document.getElementById("pixCode").textContent = pixCode;
+
+    let timeLeft = 30 * 60;
+    const timerElement = document.getElementById("timer");
+
+    const updateTimer = () => {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerElement.textContent = `QR Code expira em: ${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      timeLeft--;
+
+      if (timeLeft < 0) {
+        clearInterval(timerInterval);
+        document.querySelector(".qr-code-container").innerHTML = `<p class="expired">⚠️ O QR Code expirou. Por favor, gere um novo pagamento.</p>`;
+      }
+    };
+
+    const timerInterval = setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
+
